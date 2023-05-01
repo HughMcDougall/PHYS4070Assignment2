@@ -13,7 +13,6 @@ int main(int argc, char *argv[]) {
     /// N           int     >0          8       Dimension of NxN Grid
     /// T           double  >=0         1       Temperature for Monte carlo simulation
     /// Nits        int     >0          1E4     Number of full sweeps of the grid / samples to draw
-    /// seed        int                 0       Seed for random number generation in grid creation (redundant)
 
     //------------------------------------------------------------------
     // SIMULATION PARAMETERS (Defaults)

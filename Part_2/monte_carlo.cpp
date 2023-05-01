@@ -1,5 +1,6 @@
 //
-// Created by hughm on 29/03/2023.
+// Contains all functions and routines related to MCMC runs, including acquiring the mean and variance of the chains
+// MCMC functions return the entire chain, not a summary. These are post-processed in the runtime cpp files
 //
 
 #include "monte_carlo.hpp"

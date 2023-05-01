@@ -21,9 +21,10 @@ int main(int argc, char *argv[]) {
     /// output_dir  str                 ./results/temp_sweep.dat    Filename of output
     /// Nits        int     >0          1E4                         Number of full sweeps of the grid / samples to draw
     /// Nburn       int     >=0         1E3                         Number of burn-in itterations in monte carlo
-    /// Nchains       int   >0          1E3                         Number of independent monte carlo chains to run
+    /// Nchains      int    >0          1E3                         Number of independent monte carlo chains to run
     /// flips_per   int     >0          0(NxN)                      Number of bit flips per 'sample' If set to zero, will use flips_per=NxN
     /// seed        int                 0                           Seed for random number generation
+    /// printgrid   bool                true                        If true, print the grid state at each temp for the last chain
 
     //------------------------------------------------------------------
     // SIMULATION PARAMETERS (Defaults)
@@ -42,6 +43,8 @@ int main(int argc, char *argv[]) {
     int flips_per = 0;
     int seed = 0;
 
+    bool printgrid = true;
+
     //------------------------------------------------------------------
     // INPUTS
     {
@@ -58,6 +61,8 @@ int main(int argc, char *argv[]) {
 
         if (argc > 9) { flips_per = std::stoi(argv[9]); }
         if (argc > 10) { seed = std::stoi(argv[10]); }
+        if (argc > 11) { printgrid = std::stoi(argv[11]); }
+
     }
 
     //------------------------------------------------------------------
@@ -111,7 +116,14 @@ int main(int argc, char *argv[]) {
             output << "\n";
 
             std::cout<<"\tOutputs done.\n";
+
+            if(k==Nchains-1 && printgrid){
+                std::cout<<"Grid Final State at T = "<<T<<"\n";
+                grid_instance.print();
+            }
+
         }
+
     }
 
     //------------------------------------------------------------------

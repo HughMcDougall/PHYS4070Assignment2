@@ -1,5 +1,6 @@
 //
-// Created by hughm on 29/03/2023.
+// Contains functions for easily generating random numbers. Use this for non-parallelized MCMC runs,
+// As it's easier to pass an SRAND seed for a particular run
 //
 
 #include <random>
