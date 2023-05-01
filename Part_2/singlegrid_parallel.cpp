@@ -21,11 +21,10 @@ int main(int argc, char *argv[]) {
     //------------------------------------------------------------------
     // SIMULATION PARAMETERS (Defaults)
     int N=8;
-    double T = 5.0;
+    double T = 5;
 
-    int Nits = (int)1E4;
-    int Nburn = (int)1E3;
-    int flips_per = 0;
+    int Nits = 1;
+    int Nburn = 0;
     int seed = 1;
 
     //------------------------------------------------------------------
@@ -35,8 +34,7 @@ int main(int argc, char *argv[]) {
         if (argc > 2) { T = std::stod(argv[2]); }
         if (argc > 3) { Nits = std::stoi(argv[3]); }
         if (argc > 4) { Nburn = std::stoi(argv[4]); }
-        if (argc > 5) { flips_per = std::stoi(argv[5]); }
-        if (argc > 6) { seed = std::stoi(argv[6]); }
+        if (argc > 6) { seed = std::stoi(argv[5]); }
     }
 
     //------------------------------------------------------------------
@@ -45,7 +43,6 @@ int main(int argc, char *argv[]) {
     assert(T>=0             && "Monte Carlo Temp must be >=0");
     assert(Nits >0          && "Number of samples must be >0");
     assert(Nburn>=0         && "Cannot have negative burn in itterations");
-    assert(flips_per >=0    && "Number of flips per samples cannot be negative");
 
     // Make a grid
     grid::grid grid_instance(N, seed);
@@ -57,7 +54,7 @@ int main(int argc, char *argv[]) {
     std::cout << "--------\n";
     std::cout << "T = "<< T <<"\n";
     std::cout << "Doing MCMC Run with "<< Nits <<" Samples and "<<Nburn<<" Burn-in \n";
-    std::vector<std::vector<int>> outs = grid_monte(grid_instance, Nits, Nburn, T, flips_per, seed);
+    std::vector<std::vector<int>> outs = monte_multithread(grid_instance, Nits, Nburn, T);
 
     //Do outputs
     std::cout << "--------\n";

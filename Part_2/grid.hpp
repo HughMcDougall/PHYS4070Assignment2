@@ -92,6 +92,13 @@ namespace grid{
 
             }
 
+            void force_update(int M, int E){
+                /// Forces an update to the grid's energy and spin.
+                /// For use in multithreading to do bulk application of state changes. Not for normal use.
+                _netspin=M;
+                _energy=E;
+            }
+
             //==============
             //Gets
             int& at(unt i, unt j)        {return _datavec[smartmod(i,_N) * _N + smartmod(j,_N)];}  //For assigning
@@ -107,13 +114,16 @@ namespace grid{
 
             //==============
             //State Changes
-            void flip(unt i, unt j, bool calc_energy = true, int energy_change = 0){
+            void flip(unt i, unt j, bool calc_energy = true, int energy_change = 0, bool change_state=true){
                 /// Flips grid location i,j and updates grid's energy and spin
                 if (calc_energy)    {energy_change  =   echange_from_flip(i,j);}
 
+                // Update grid properties. Skip E and M updates if flagged, to avoid double write in openMP
                 at(i,j) *= -1;
-                _energy  += energy_change;
-                _netspin += at(i,j)*2; // double as we over-write the old spin
+                if (change_state){
+                    _energy  += energy_change;
+                    _netspin += at(i,j)*2; // double as we over-write the old spin
+                }
             }
 
             int echange_from_flip(unt i, unt j){

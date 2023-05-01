@@ -49,8 +49,8 @@ cmake_ninja_workdir = C$:/Users/hughm/OneDrive/UQ/PHYS4070/Assignments/Assignmen
 
 build cmake_object_order_depends_target_Assignment_2: phony || CMakeFiles/Assignment_2.dir
 
-build CMakeFiles/Assignment_2.dir/Part_2/rand_test.cpp.obj: CXX_COMPILER__Assignment_2_Debug C$:/Users/hughm/OneDrive/UQ/PHYS4070/Assignments/Assignment$ 2/Part_2/rand_test.cpp || cmake_object_order_depends_target_Assignment_2
-  DEP_FILE = CMakeFiles\Assignment_2.dir\Part_2\rand_test.cpp.obj.d
+build CMakeFiles/Assignment_2.dir/Part_2/singlegrid_parallel.cpp.obj: CXX_COMPILER__Assignment_2_Debug C$:/Users/hughm/OneDrive/UQ/PHYS4070/Assignments/Assignment$ 2/Part_2/singlegrid_parallel.cpp || cmake_object_order_depends_target_Assignment_2
+  DEP_FILE = CMakeFiles\Assignment_2.dir\Part_2\singlegrid_parallel.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles\Assignment_2.dir
   OBJECT_FILE_DIR = CMakeFiles\Assignment_2.dir\Part_2
@@ -81,7 +81,7 @@ build CMakeFiles/Assignment_2.dir/Part_2/vector_utils.cpp.obj: CXX_COMPILER__Ass
 #############################################
 # Link the executable Assignment_2.exe
 
-build Assignment_2.exe: CXX_EXECUTABLE_LINKER__Assignment_2_Debug CMakeFiles/Assignment_2.dir/Part_2/rand_test.cpp.obj CMakeFiles/Assignment_2.dir/Part_2/monte_carlo.cpp.obj CMakeFiles/Assignment_2.dir/Part_2/rand_utils.cpp.obj CMakeFiles/Assignment_2.dir/Part_2/vector_utils.cpp.obj
+build Assignment_2.exe: CXX_EXECUTABLE_LINKER__Assignment_2_Debug CMakeFiles/Assignment_2.dir/Part_2/singlegrid_parallel.cpp.obj CMakeFiles/Assignment_2.dir/Part_2/monte_carlo.cpp.obj CMakeFiles/Assignment_2.dir/Part_2/rand_utils.cpp.obj CMakeFiles/Assignment_2.dir/Part_2/vector_utils.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\Assignment_2.dir
