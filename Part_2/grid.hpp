@@ -81,7 +81,7 @@ namespace grid{
 
                 for (int i=0; i<_N; i++){
                     for (int j=0; j<_N; j++){
-                        e_per_site  = (at(i+1,j)+at(i-1,j+1));
+                        e_per_site  = ( at(i+1,j) + at(i,j+1));
                         e_per_site *= -at(i,j);
                         _energy    += e_per_site;
 

@@ -6,9 +6,6 @@
 #include <cassert>
 #include "rand_utils.hpp"
 
-std::mt19937 mt_generator(0);
-std::uniform_real_distribution<double> uniform_rn(0.0, 1.0);
-
 double randd() {
     double out = (double)rand() / (double)RAND_MAX;
     return out;

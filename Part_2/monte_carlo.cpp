@@ -3,11 +3,14 @@
 //
 
 #include "monte_carlo.hpp"
+
 #include <vector>
 #include <cmath>
+#include <omp.h>
+
 #include "grid.hpp"
 #include "rand_utils.hpp"
-#include <omp.h>
+
 
 //-----------------------------------------------------------
 // Utilities
@@ -124,13 +127,13 @@ std::vector<std::vector<int>> grid_monte(grid::grid & targ_grid, int Nits, int N
 
 //-----------------------------------------------------------
 // Monte-Carlo with openMP
+
 std::vector<std::vector<int>> monte_multithread(grid::grid & targ_grid, int Nits, int Nburn, double T){
-    /// Runs a single MCMC run on a grid. Returns as vec of vec of ints: {energy, spin}
+    /// Runs a single MCMC run on a grid with multithreading. Returns as vec of vec of ints: {energy, spin}
 
     assert(T>=0 && "Temperature cannot be negative");
     assert(Nits>0 && "Must have non-zero number of itterations");
     assert(targ_grid.N()>1 && "Grid size must be 2 or greater");
-
 
     //-----------------
     // Setup
@@ -144,25 +147,26 @@ std::vector<std::vector<int>> monte_multithread(grid::grid & targ_grid, int Nits
     int write_index = 0;
     bool burnin_finished  = false;
 
-    // MISSINGNO - add thread specific rng
-
     //-----------------
     //Main monte-carlo loop, parallelized
     #pragma omp parallel default(none) shared(std::cout, targ_grid, Nits, Nburn, T, out_energies, out_spins, total_its, write_index, burnin_finished)
     {
 
+    // Multi-thread check-ins
     int ntid = omp_get_thread_num();
+    #pragma omp master
+        {
+            std::cout << "Master thread index : " << ntid << std::endl;
+            std::cout << "Number of threads = " << omp_get_num_threads() << std::endl;
+        }
+    #pragma omp barrier
+
     #pragma omp critical
     {
-        std::cout << "Hello from thread : " << ntid << std::endl;
+        std::cout << "Check-in from thread : " << ntid << std::endl;
     }
 
-    #pragma omp master
-    {
-        std::cout << "Big Hello from thread : " << ntid << std::endl;
-        std::cout << "Number of threads = " << omp_get_num_threads() << std::endl;
-    }
-
+    //-------------------------------------
 
     // Thread specific MCMC step variables
     double roll;
@@ -173,6 +177,12 @@ std::vector<std::vector<int>> monte_multithread(grid::grid & targ_grid, int Nits
     // Thread accumulators for energy and spin
     int thread_delta_M;
     int thread_delta_E;
+
+    // Thread specific RNG
+    std::mt19937 mt_generator(ntid);
+    std::uniform_real_distribution<double> uniform_rn(0.0, 1.0);
+
+    //-------------------------------------
 
     // Loop over all itterations
     for (int itt=0; itt<=total_its; itt++){
@@ -199,7 +209,7 @@ std::vector<std::vector<int>> monte_multithread(grid::grid & targ_grid, int Nits
                     } else if (T==0){
                         use_step=false;
                     } else{
-                        roll=randd();
+                        roll=uniform_rn(mt_generator);
                         chance = exp(-1.0*(double)prop_energy / (double)T  );
                         if( chance > roll){ use_step=true; } else {use_step=false;}
                     }
@@ -215,15 +225,7 @@ std::vector<std::vector<int>> monte_multithread(grid::grid & targ_grid, int Nits
             }
 
             // Barrier, all threads must finish odds / evens before moving to next parity
-            #pragma omp critical
-            {
-            std::cout << "Waiting at barrier for thread : " << ntid << std::endl;
-            }
             #pragma omp barrier
-            #pragma omp critical
-            {
-            std::cout << "Passed barrier for thread : " << ntid << std::endl;
-            }
 
         } // parity
 
@@ -233,6 +235,7 @@ std::vector<std::vector<int>> monte_multithread(grid::grid & targ_grid, int Nits
             targ_grid.force_update(targ_grid.netspin()+thread_delta_M, targ_grid.energy()+thread_delta_E);
         } // update
 
+        #pragma omp barrier // Do a barrier here so the master thread uses only the final results
         // Check if burn-in is done. If out of burn-in phase, write results
         // This task performed only by master thread
         # pragma omp master

@@ -21,12 +21,12 @@ int main(int argc, char *argv[]) {
     //------------------------------------------------------------------
     // SIMULATION PARAMETERS (Defaults)
     int N=8;
-    double T = 5.0;
+    double T = 2.77*0.75;
 
     int Nits = (int)1E4;
     int Nburn = (int)1E3;
     int flips_per = 0;
-    int seed = 1;
+    int seed = 0;
 
     //------------------------------------------------------------------
     // INPUTS
@@ -52,6 +52,10 @@ int main(int argc, char *argv[]) {
     grid_instance.reset(1);
     std::cout << "--------\n";
     std::cout << "Grid Generated. Initial State:\n";
+    std::cout << "--------\n";
+    grid_instance.print();
+    std::cout << "--------\n";
+    std::cout << "Initial Energy And Spin:\t" << grid_instance.energy() << "\t" << grid_instance.netspin() << "\n";
 
     // Perform MCMC run
     std::cout << "--------\n";
